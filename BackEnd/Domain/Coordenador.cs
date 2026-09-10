@@ -1,10 +1,10 @@
 namespace ConflitosAgenda.Api.Domain;
 
 public sealed class Coordenador(
-    Guid id,
-    string nome
+    Guid Id,
+    string Nome
 )
 {
-    public Guid Id { get; } = id;
-    public string Nome { get; } = nome;
+    public Guid Id { get; } = Id;
+    public string Nome { get; } = Nome;
 }

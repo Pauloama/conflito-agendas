@@ -20,5 +20,4 @@ public sealed record ImportarPlanoFocalRequest(
 public sealed record PessoaCriticaInput(
     Guid PessoaId,
     string PessoaNome,
-    string ProjetoId,
-    string ProjetoNome);
+    Projeto Projeto);

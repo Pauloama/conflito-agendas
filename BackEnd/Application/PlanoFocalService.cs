@@ -31,7 +31,7 @@ public sealed class PlanoFocalService(IPlanoFocalStore store)
         }
 
         var pessoas = request.Pessoas
-            .Select(p => new PessoaCritica(p.PessoaId, p.PessoaNome, p.ProjetoId, p.ProjetoNome))
+            .Select(p => new PessoaCritica(p.PessoaId, p.PessoaNome, p.Projeto))
             .ToArray();
 
         await store.SubstituirAsync(pessoas, cancellationToken);
