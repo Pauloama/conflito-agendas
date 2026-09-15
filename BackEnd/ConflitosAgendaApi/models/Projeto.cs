@@ -1,0 +1,39 @@
+namespace ConflitosAgendaApi.Models;
+public sealed class Projeto
+{
+    public Projeto(
+    )
+    {
+    }
+    public Projeto(
+        Guid id,
+        string nome,
+        List<Colaborador> pessoasCriticas,
+        List<Colaborador> colaboradores
+    )
+    {
+        this.Id = id;
+        this.Nome = nome;
+        this.PessoasCriticas = pessoasCriticas;
+        this.Colaboradores = colaboradores;
+    }
+    public Guid Id { get; private set; }
+    public string Nome { get; private set; }
+    public List<Colaborador> PessoasCriticas { get; private set; } = new();
+    public List<Colaborador> Colaboradores { get; private set; } = new();
+
+    public void AdicionarColaborador(Colaborador colaborador){
+
+        this.Colaboradores.Add(colaborador);
+    
+    }
+    public void AdicionarPessoaCritica(Colaborador colaborador){
+        this.PessoasCriticas.Add(colaborador);
+    }
+    public void RemoverColaborador(Colaborador colaborador){
+        this.Colaboradores.Remove(colaborador);
+    }
+    public void RemoverPessoaCritica(Colaborador colaborador){
+        this.PessoasCriticas.Remove(colaborador);
+    }
+}
