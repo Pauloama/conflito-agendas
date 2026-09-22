@@ -44,39 +44,75 @@ public class SolicitacaoRepository : iSolicitacaoRepository
 
     public async Task<List<Solicitacao>> GetByColaboradorIdAsync(Guid colaboradorId)
     {
-        return await _context.Solicitacoes
+        var list = await _context.Solicitacoes
             .Include(s => s.Colaborador)
             .Include(s => s.Periodos)
             .Include(s => s.Coordenador)
             .Where(s => s.Colaborador.Id == colaboradorId)
             .ToListAsync();
+        if (list == null || list.Count == 0)
+        {
+            throw new KeyNotFoundException("Nenhuma solicitação encontrada para o colaborador especificado.");
+        }
+        return list;
     }
 
     public async Task<List<Solicitacao>> GetByStatusAsync(StatusSolicitacao status)
     {
-        return await _context.Solicitacoes
+        var list = await _context.Solicitacoes
             .Include(s => s.Colaborador)
             .Include(s => s.Periodos)
             .Include(s => s.Coordenador)
             .Where(s => s.Status == status)
             .ToListAsync();
+        if (list == null || list.Count == 0)
+        {
+            throw new KeyNotFoundException("Nenhuma solicitação encontrada para o status especificado.");
+        }
+        return list;
     }
 
     public async Task AddAsync(Solicitacao solicitacao)
     {
-        await _context.Solicitacoes.AddAsync(solicitacao);
-        await _context.SaveChangesAsync();
+        try{
+            await _context.Solicitacoes.AddAsync(solicitacao);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao adicionar solicitação: {ex.Message}");
+        }
     }
 
     public async Task UpdateAsync(Solicitacao solicitacao)
     {
-        _context.Solicitacoes.Update(solicitacao);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.Solicitacoes.Update(solicitacao);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao atualizar solicitação: {ex.Message}");
+        }
     }
 
-    public async Task DeleteAsync(Solicitacao solicitacao)
+    public async Task DeleteAsync(int id)
     {
-        _context.Solicitacoes.Remove(solicitacao);
-        await _context.SaveChangesAsync();
+        var periodo = await _context.Periodos.FindAsync(id);
+        if (periodo == null)
+        {
+            throw new KeyNotFoundException($"Período com ID {id} não encontrado.");
+        }
+        try
+        {
+            _context.Periodos.Remove(periodo);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao deletar o período com ID {id}: {ex.Message}", ex);
+        }
     }
+    
 }

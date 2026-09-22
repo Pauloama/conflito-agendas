@@ -9,5 +9,5 @@ public interface iSolicitacaoRepository
     Task<List<Solicitacao>> GetByStatusAsync(StatusSolicitacao status);
     Task AddAsync(Solicitacao solicitacao);
     Task UpdateAsync(Solicitacao solicitacao);
-    Task DeleteAsync(Solicitacao solicitacao);
+    Task DeleteAsync(int id);
 }

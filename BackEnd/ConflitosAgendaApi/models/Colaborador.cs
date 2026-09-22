@@ -24,9 +24,5 @@ public class Colaborador
         IsCoordenador = true;
     }
 
-    public override string ToString()
-    {
-        return Nome;
-    }
     
 }

@@ -21,7 +21,7 @@ public sealed class Solicitacao
     public DateTimeOffset CriadaEm { get; private set; } = DateTimeOffset.UtcNow;
     public Colaborador Coordenador { get; private set; }
     public string? Observacao { get; private set; }
-
+    public bool Abono { get; private set; } = false;
     public bool isPessoaCritica { get; private set; } = false;
 
     public void Aprovar()
