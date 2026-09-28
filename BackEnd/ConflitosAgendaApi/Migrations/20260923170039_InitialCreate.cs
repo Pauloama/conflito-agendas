@@ -15,7 +15,8 @@ namespace ConflitosAgendaApi.Migrations
                 name: "Colaboradores",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsCoordenador = table.Column<bool>(type: "bit", nullable: false)
@@ -29,7 +30,8 @@ namespace ConflitosAgendaApi.Migrations
                 name: "Projetos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -41,15 +43,25 @@ namespace ConflitosAgendaApi.Migrations
                 name: "Solicitacoes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ColaboradorId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CoordenadorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CriadaEm = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CoordenadorId = table.Column<int>(type: "int", nullable: false),
                     Observacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Abono = table.Column<bool>(type: "bit", nullable: false),
                     isPessoaCritica = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Solicitacoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Solicitacoes_Colaboradores_ColaboradorId",
+                        column: x => x.ColaboradorId,
+                        principalTable: "Colaboradores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Solicitacoes_Colaboradores_CoordenadorId",
                         column: x => x.CoordenadorId,
@@ -62,8 +74,8 @@ namespace ConflitosAgendaApi.Migrations
                 name: "ProjetoColaborador",
                 columns: table => new
                 {
-                    ColaboradoresId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProjetosId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ColaboradoresId = table.Column<int>(type: "int", nullable: false),
+                    ProjetosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,8 +98,8 @@ namespace ConflitosAgendaApi.Migrations
                 name: "ProjetoPessoaCritica",
                 columns: table => new
                 {
-                    PessoasCriticasId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProjetoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PessoasCriticasId = table.Column<int>(type: "int", nullable: false),
+                    ProjetoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,10 +122,11 @@ namespace ConflitosAgendaApi.Migrations
                 name: "Periodos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DataInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataFim = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SolicitacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    SolicitacaoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,6 +152,11 @@ namespace ConflitosAgendaApi.Migrations
                 name: "IX_ProjetoPessoaCritica_ProjetoId",
                 table: "ProjetoPessoaCritica",
                 column: "ProjetoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solicitacoes_ColaboradorId",
+                table: "Solicitacoes",
+                column: "ColaboradorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solicitacoes_CoordenadorId",

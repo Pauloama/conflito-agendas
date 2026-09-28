@@ -5,7 +5,7 @@ namespace ConflitosAgendaApi.Dtos.Periodos;
 public class PeriodoResponseDto
 {
     [Required]
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     [Required]
     public DateTime DataInicio { get; private set; }
     [Required]

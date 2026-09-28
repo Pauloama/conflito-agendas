@@ -6,7 +6,7 @@ public sealed class Projeto
     {
     }
     public Projeto(
-        Guid id,
+        int id,
         string nome,
         List<Colaborador> pessoasCriticas,
         List<Colaborador> colaboradores
@@ -17,7 +17,7 @@ public sealed class Projeto
         this.PessoasCriticas = pessoasCriticas;
         this.Colaboradores = colaboradores;
     }
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public string Nome { get; private set; }
     public List<Colaborador> PessoasCriticas { get; private set; } = new();
     public List<Colaborador> Colaboradores { get; private set; } = new();

@@ -13,7 +13,7 @@ public class SolicitacaoRepository : iSolicitacaoRepository
         _context = context;
     }
 
-    public async Task<Solicitacao> GetByIdAsync(Guid id)
+    public async Task<Solicitacao> GetByIdAsync(int id)
     {
         var solicitacao = await _context.Solicitacoes
             .Include(s => s.Colaborador)
@@ -42,7 +42,7 @@ public class SolicitacaoRepository : iSolicitacaoRepository
             return list;
     }
 
-    public async Task<List<Solicitacao>> GetByColaboradorIdAsync(Guid colaboradorId)
+    public async Task<List<Solicitacao>> GetByColaboradorIdAsync(int colaboradorId)
     {
         var list = await _context.Solicitacoes
             .Include(s => s.Colaborador)
@@ -99,19 +99,19 @@ public class SolicitacaoRepository : iSolicitacaoRepository
 
     public async Task DeleteAsync(int id)
     {
-        var periodo = await _context.Periodos.FindAsync(id);
-        if (periodo == null)
+        var solicitacao = await _context.Solicitacoes.FindAsync(id);
+        if (solicitacao == null)
         {
-            throw new KeyNotFoundException($"Período com ID {id} não encontrado.");
+            throw new KeyNotFoundException($"Solicitação com ID {id} não encontrada.");
         }
         try
         {
-            _context.Periodos.Remove(periodo);
+            _context.Solicitacoes.Remove(solicitacao);
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
-            throw new Exception($"Erro ao deletar o período com ID {id}: {ex.Message}", ex);
+            throw new Exception($"Erro ao deletar a solicitação com ID {id}: {ex.Message}", ex);
         }
     }
     

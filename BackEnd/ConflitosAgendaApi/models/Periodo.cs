@@ -8,7 +8,7 @@ public class Periodo
             DataInicio = dataInicio;
             DataFim = dataFim;   
     }
-    public Guid Id { get; private set;} = Guid.NewGuid();
+    public int Id { get; private set; }
     public DateTime DataInicio { get; private set; }
     public DateTime DataFim { get; private set; }
     

@@ -3,9 +3,9 @@ using ConflitosAgendaApi.Models;
 
 public interface iSolicitacaoRepository
 {
-    Task<Solicitacao> GetByIdAsync(Guid id);
+    Task<Solicitacao> GetByIdAsync(int id);
     Task<List<Solicitacao>> GetAllAsync();
-    Task<List<Solicitacao>> GetByColaboradorIdAsync(Guid colaboradorId);
+    Task<List<Solicitacao>> GetByColaboradorIdAsync(int colaboradorId);
     Task<List<Solicitacao>> GetByStatusAsync(StatusSolicitacao status);
     Task AddAsync(Solicitacao solicitacao);
     Task UpdateAsync(Solicitacao solicitacao);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConflitosAgendaApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260915155243_InitialCreate")]
+    [Migration("20260923170039_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,9 +27,11 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ConflitosAgendaApi.Models.Colaborador", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -49,9 +51,11 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ConflitosAgendaApi.Models.Projeto", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -64,12 +68,23 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ConflitosAgendaApi.Models.Solicitacao", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("CoordenadorId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Abono")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ColaboradorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoordenadorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CriadaEm")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Observacao")
                         .HasColumnType("nvarchar(max)");
@@ -82,6 +97,8 @@ namespace ConflitosAgendaApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColaboradorId");
+
                     b.HasIndex("CoordenadorId");
 
                     b.ToTable("Solicitacoes");
@@ -89,9 +106,11 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("Periodo", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");
@@ -99,8 +118,8 @@ namespace ConflitosAgendaApi.Migrations
                     b.Property<DateTime>("DataInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("SolicitacaoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("SolicitacaoId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -111,11 +130,11 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ProjetoColaborador", b =>
                 {
-                    b.Property<Guid>("ColaboradoresId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ColaboradoresId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ProjetosId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ProjetosId")
+                        .HasColumnType("int");
 
                     b.HasKey("ColaboradoresId", "ProjetosId");
 
@@ -126,11 +145,11 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ProjetoPessoaCritica", b =>
                 {
-                    b.Property<Guid>("PessoasCriticasId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("PessoasCriticasId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ProjetoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ProjetoId")
+                        .HasColumnType("int");
 
                     b.HasKey("PessoasCriticasId", "ProjetoId");
 
@@ -141,11 +160,19 @@ namespace ConflitosAgendaApi.Migrations
 
             modelBuilder.Entity("ConflitosAgendaApi.Models.Solicitacao", b =>
                 {
+                    b.HasOne("ConflitosAgendaApi.Models.Colaborador", "Colaborador")
+                        .WithMany()
+                        .HasForeignKey("ColaboradorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ConflitosAgendaApi.Models.Colaborador", "Coordenador")
                         .WithMany()
                         .HasForeignKey("CoordenadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Colaborador");
 
                     b.Navigation("Coordenador");
                 });

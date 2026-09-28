@@ -5,7 +5,7 @@ namespace ConflitosAgendaApi.Dtos.Solicitacoes;
 
 public class SolicitacaoResponseDto
 {
-    public Guid Id { get; private set;} = Guid.NewGuid();
+    public int Id { get; private set; }
 
     public Colaborador Colaborador { get; private set; }
     public List<Periodo> Periodos { get; private set; } = new();

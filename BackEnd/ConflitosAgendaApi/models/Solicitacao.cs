@@ -14,7 +14,7 @@ public sealed class Solicitacao
         this.Periodos = periodos;
         this.Coordenador = coordenador;
     }
-    public Guid Id { get; private set;} = Guid.NewGuid();
+    public int Id { get; private set; }
     public Colaborador Colaborador { get; private set; }
     public List<Periodo> Periodos { get; private set; } = new();
     public StatusSolicitacao Status { get; private set; } = StatusSolicitacao.Em_Analise;
