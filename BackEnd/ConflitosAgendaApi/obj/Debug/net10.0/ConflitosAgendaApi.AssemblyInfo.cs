@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConflitosAgendaApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d10129586f13e2d74cb419b9eef714b371ccefc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a60aa126c34c6c8b250ffa04eb4c3772ad7a5e1e")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConflitosAgendaApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConflitosAgendaApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

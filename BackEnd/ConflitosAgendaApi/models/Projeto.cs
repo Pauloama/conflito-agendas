@@ -18,22 +18,9 @@ public sealed class Projeto
         this.Colaboradores = colaboradores;
     }
     public int Id { get; private set; }
-    public string Nome { get; private set; }
+    public string Nome { get; private set; } = string.Empty;
     public List<Colaborador> PessoasCriticas { get; private set; } = new();
     public List<Colaborador> Colaboradores { get; private set; } = new();
 
-    public void AdicionarColaborador(Colaborador colaborador){
-
-        this.Colaboradores.Add(colaborador);
     
-    }
-    public void AdicionarPessoaCritica(Colaborador colaborador){
-        this.PessoasCriticas.Add(colaborador);
-    }
-    public void RemoverColaborador(Colaborador colaborador){
-        this.Colaboradores.Remove(colaborador);
-    }
-    public void RemoverPessoaCritica(Colaborador colaborador){
-        this.PessoasCriticas.Remove(colaborador);
-    }
 }

@@ -1,14 +1,14 @@
 namespace ConflitosAgendaApi.Services.Interfaces;
 
+using ConflitosAgendaApi.Dtos.Colaboradores;
 using ConflitosAgendaApi.Models;
 
 public interface IColaboradorService
 {
-    Task<Colaborador?> GetByIdAsync(int id);
-    Task<IEnumerable<Colaborador>> ListAllAsync();
-    Task<Colaborador?> AddAsync(Colaborador colaborador);
-    Task<Colaborador?> UpdateAsync(Colaborador colaborador);
-    Task<Colaborador?> DeleteAsync(int id);
-    Task<Colaborador?> TornarCoordenadorAsync(int id);
-    Task<Colaborador?> TornarPessoaCriticaAsync(int id);
+    Task<ColaboradorResponseDto?> GetByIdAsync(int id);
+    Task<IEnumerable<ColaboradorResponseDto>> ListAllAsync();
+    Task<ColaboradorInsertionDto?> AddAsync(Colaborador colaborador);
+    Task<ColaboradorUpdateDto?> UpdateAsync(Colaborador colaborador);
+    Task<bool?> DeleteAsync(int id);
+    Task<ColaboradorUpdateDto?> TornarCoordenadorAsync(int id);
 }

@@ -8,4 +8,5 @@ public interface IColaboradorRepository
     Task<Colaborador?> AddAsync(Colaborador colaborador);
     Task<Colaborador?> UpdateAsync(Colaborador colaborador);
     Task<Colaborador?> DeleteAsync(int id);
+    Task<Colaborador?> TornarCoordenadorAsync(int id);
 }

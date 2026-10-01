@@ -8,4 +8,13 @@ public class ColaboradorResponseDto
     public string Email { get; private set; }
     public List<Projeto> Projetos { get; private set; } = new();
     public bool IsCoordenador { get; private set; } = false;
+
+    public ColaboradorResponseDto(Colaborador colaborador)
+    {
+        Id = colaborador.Id;
+        Nome = colaborador.Nome;
+        Email = colaborador.Email;
+        Projetos = colaborador.Projetos;
+        IsCoordenador = colaborador.IsCoordenador;
+    }
 }

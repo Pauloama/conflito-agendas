@@ -14,4 +14,12 @@ public class ColaboradorUpdateDto
     public List<Projeto> Projetos { get; private set; } = new();
     [Required]
     public bool IsCoordenador { get; private set; } = false;
+
+    public ColaboradorUpdateDto(Colaborador colaborador)
+    {
+        Nome = colaborador.Nome;
+        Email = colaborador.Email;
+        Projetos = colaborador.Projetos;
+        IsCoordenador = colaborador.IsCoordenador;
+    }
 }

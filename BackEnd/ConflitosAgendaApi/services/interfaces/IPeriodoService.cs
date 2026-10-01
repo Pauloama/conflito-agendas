@@ -1,13 +1,13 @@
 namespace ConflitosAgendaApi.Services.Interfaces;
-using ConflitosAgendaApi.Models;
+using ConflitosAgendaApi.Dtos.Periodos;
 
 public interface IPeriodoService
 {
-    Task<Periodo?> GetByIdAsync(int id);
-    Task<IEnumerable<Periodo>> ListAllAsync();
-    Task<Periodo?> AddAsync(Periodo periodo);
-    Task<Periodo?> UpdateAsync(Periodo periodo);
-    Task<Periodo?> DeleteAsync(int id);
-    Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId);
-    Task<bool> ValidarPeriodoAsync(Periodo periodo);
+    Task<PeriodoResponseDto?> GetByIdAsync(int id);
+    Task<IEnumerable<PeriodoResponseDto>> ListAllAsync();
+    Task<PeriodoInsertionDto?> AddAsync(PeriodoInsertionDto periodo);
+    Task<PeriodoUpdateDto?> UpdateAsync(PeriodoUpdateDto periodo);
+    Task<bool?> DeleteAsync(int id);
+    Task<IEnumerable<PeriodoResponseDto>> ListByColaboradorIdAsync(int colaboradorId);
+    Task<bool> ValidarPeriodoAsync(PeriodoResponseDto periodo);
 }

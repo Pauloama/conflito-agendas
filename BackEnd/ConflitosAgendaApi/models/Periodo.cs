@@ -1,3 +1,4 @@
+namespace ConflitosAgendaApi.Models;
 public class Periodo
 {
     public Periodo()
@@ -11,5 +12,6 @@ public class Periodo
     public int Id { get; private set; }
     public DateTime DataInicio { get; private set; }
     public DateTime DataFim { get; private set; }
+    public int IdColaborador { get; private set; }
     
 }

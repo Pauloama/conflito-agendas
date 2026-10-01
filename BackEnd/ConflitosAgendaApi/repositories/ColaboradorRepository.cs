@@ -69,4 +69,17 @@ using Microsoft.EntityFrameworkCore;
         await _context.SaveChangesAsync();
         return existingColaborador;
     }
+
+    public async Task<Colaborador?> TornarCoordenadorAsync(int id)
+    {
+        var colaborador = await _context.Colaboradores.FindAsync(id);
+        if (colaborador == null)
+        {
+            return null;
+        }
+
+        colaborador.TornarCoordenador();
+        await _context.SaveChangesAsync();
+        return colaborador;
+    }
 }

@@ -97,4 +97,18 @@ public class PeriodoRepository : IPeriodoRepository
        
         
     }
+
+    public async Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId)
+    {
+        try
+        {
+            return await _context.Periodos
+                .Where(p => p.ColaboradorId == colaboradorId)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao listar períodos para o colaborador com ID {colaboradorId}: {ex.Message}", ex);
+        }
+    }
 }
