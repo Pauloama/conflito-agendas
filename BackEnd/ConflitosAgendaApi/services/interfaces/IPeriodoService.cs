@@ -9,5 +9,5 @@ public interface IPeriodoService
     Task<PeriodoUpdateDto?> UpdateAsync(PeriodoUpdateDto periodo);
     Task<bool?> DeleteAsync(int id);
     Task<IEnumerable<PeriodoResponseDto>> ListByColaboradorIdAsync(int colaboradorId);
-    Task<bool> ValidarPeriodoAsync(PeriodoResponseDto periodo);
+    Task<bool> ValidarPeriodoAsync(int periodoId);
 }

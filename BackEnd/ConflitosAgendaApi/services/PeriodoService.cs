@@ -30,12 +30,17 @@ public class PeriodoService : IPeriodoService
     }
     public async Task<PeriodoInsertionDto?> AddAsync(PeriodoInsertionDto periodo)
     {
-        var novoPeriodo = new Periodo(periodo.DataInicio, periodo.DataFim);
-        var periodoAdicionado = await _periodoRepository.AddAsync(novoPeriodo);
-        if (periodoAdicionado == null)
+        if (periodo == null)
         {
             return null;
         }
+        var periodoExistente = await _periodoRepository.ListByColaboradorIdAsync(periodo.IdColaborador);
+        if (periodoExistente.Any(p => p.IdColaborador == periodo.IdColaborador && p.DataFim == periodo.DataFim || p.DataInicio == periodo.DataInicio))
+        {
+            return null;
+        }
+        var novoPeriodo = new Periodo(periodo.DataInicio, periodo.DataFim);
+        var periodoAdicionado = await _periodoRepository.AddAsync(novoPeriodo);
         return new PeriodoInsertionDto(periodoAdicionado);
     }
     public async Task<PeriodoUpdateDto?> UpdateAsync(PeriodoUpdateDto periodo)
@@ -61,9 +66,9 @@ public class PeriodoService : IPeriodoService
         var periodos = await _periodoRepository.ListByColaboradorIdAsync(colaboradorId);
         return periodos.Select(p => new PeriodoResponseDto(p));
     }
-    public async Task<bool> ValidarPeriodoAsync(PeriodoResponseDto periodo)
+    public async Task<bool> ValidarPeriodoAsync(int periodoId)
     {
-        return await _periodoRepository.ValidarPeriodoAsync(new Periodo(periodo.DataInicio, periodo.DataFim));
+        return await _periodoRepository.ValidarPeriodoAsync(periodoId);
     }
 
 }

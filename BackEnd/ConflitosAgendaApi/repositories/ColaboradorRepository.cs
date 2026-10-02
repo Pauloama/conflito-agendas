@@ -4,6 +4,7 @@ using ConflitosAgendaApi.Models;
 using ConflitosAgendaApi.Repositories.Interfaces;
 using ConflitosAgendaApi.Data;
 using Microsoft.EntityFrameworkCore;
+using ConflitosAgendaApi.Dtos.Colaboradores;
 
  public class ColaboradorRepository : IColaboradorRepository
 {

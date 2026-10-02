@@ -11,4 +11,10 @@ public class ProjetoUpdateDto
     public List<Colaborador> PessoasCriticas { get; set; } = new();
     [Required]
     public List<Colaborador> Colaboradores { get; set; } = new();
+    public ProjetoUpdateDto(Projeto projeto)
+    {
+        Nome = projeto.Nome;
+        PessoasCriticas = projeto.PessoasCriticas;
+        Colaboradores = projeto.Colaboradores;
+    }
 }

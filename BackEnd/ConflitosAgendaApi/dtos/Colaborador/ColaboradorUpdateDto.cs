@@ -1,4 +1,3 @@
-using ConflitosAgendaApi.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConflitosAgendaApi.Dtos.Colaboradores;
@@ -6,20 +5,8 @@ namespace ConflitosAgendaApi.Dtos.Colaboradores;
 public class ColaboradorUpdateDto
 {
     [Required]
-    public string Nome { get; private set; }
+    public string Nome { get; set; } = string.Empty;
     [Required]
     [EmailAddress]
-    public string Email { get; private set; }
-    [Required]
-    public List<Projeto> Projetos { get; private set; } = new();
-    [Required]
-    public bool IsCoordenador { get; private set; } = false;
-
-    public ColaboradorUpdateDto(Colaborador colaborador)
-    {
-        Nome = colaborador.Nome;
-        Email = colaborador.Email;
-        Projetos = colaborador.Projetos;
-        IsCoordenador = colaborador.IsCoordenador;
-    }
+    public string Email { get; set; } = string.Empty;
 }

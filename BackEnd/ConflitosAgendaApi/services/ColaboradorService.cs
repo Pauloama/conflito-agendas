@@ -1,8 +1,8 @@
 using ConflitosAgendaApi.Dtos.Colaboradores;
 using ConflitosAgendaApi.Services.Interfaces;
 using ConflitosAgendaApi.Repositories.Interfaces;
-using ConflitosAgendaApi.Repositories;
 using ConflitosAgendaApi.Models;
+
 namespace ConflitosAgendaApi.Services;
 
 public class ColaboradorService : IColaboradorService
@@ -29,24 +29,46 @@ public class ColaboradorService : IColaboradorService
         var colaboradores = await _colaboradorRepository.ListAllAsync();
         return colaboradores.Select(c => new ColaboradorResponseDto(c));
     }
-    public async Task<ColaboradorInsertionDto?> AddAsync(Colaborador colaborador)
+    public async Task<ColaboradorResponseDto?> AddAsync(
+        ColaboradorInsertionDto dto)
     {
+        var colaborador = new Colaborador(
+            dto.Nome,
+            dto.Email,
+            new List<Projeto>(),
+            false);
+
         var novoColaborador = await _colaboradorRepository.AddAsync(colaborador);
-        if (novoColaborador == null)
+
+        if (novoColaborador is null)
         {
             return null;
         }
-        return new ColaboradorInsertionDto(novoColaborador);
+
+        return new ColaboradorResponseDto(novoColaborador);
     }
-    public async Task<ColaboradorUpdateDto?> UpdateAsync(Colaborador colaborador)
+
+    public async Task<ColaboradorResponseDto?> UpdateAsync(int id, ColaboradorUpdateDto dto)
     {
-        var colaboradorAtualizado = await _colaboradorRepository.UpdateAsync(colaborador);
-        if (colaboradorAtualizado == null)
+        var colaborador = await _colaboradorRepository.GetByIdAsync(id);
+
+        if (colaborador is null)
         {
             return null;
         }
-        return new ColaboradorUpdateDto(colaboradorAtualizado);
+
+        colaborador.AtualizarDados(dto.Nome, dto.Email);
+
+        var colaboradorAtualizado = await _colaboradorRepository.UpdateAsync(colaborador);
+
+        if (colaboradorAtualizado is null)
+        {
+            return null;
+        }
+
+        return new ColaboradorResponseDto(colaboradorAtualizado);
     }
+
     public async Task<bool?> DeleteAsync(int id)
     {
         var colaborador = await _colaboradorRepository.GetByIdAsync(id);
@@ -57,14 +79,24 @@ public class ColaboradorService : IColaboradorService
         await _colaboradorRepository.DeleteAsync(id);
         return true;
     }
-    public async Task<ColaboradorUpdateDto?> TornarCoordenadorAsync(int id)
+    public async Task<ColaboradorResponseDto?> TornarCoordenadorAsync(int id, ColaboradorUpdateDto dto)
     {
-        var colaborador = await _colaboradorRepository.TornarCoordenadorAsync(id);
-        if (colaborador == null)
+        var colaborador = await _colaboradorRepository.GetByIdAsync(id);
+
+        if (colaborador is null)
         {
             return null;
         }
-        return new ColaboradorUpdateDto(colaborador);
+        colaborador.TornarCoordenador();
+
+        var colaboradorAtualizado = await _colaboradorRepository.UpdateAsync(colaborador);
+
+        if (colaboradorAtualizado is null)
+        {
+            return null;
+        }
+
+        return new ColaboradorResponseDto(colaboradorAtualizado);
     }
 
-    }
+}
