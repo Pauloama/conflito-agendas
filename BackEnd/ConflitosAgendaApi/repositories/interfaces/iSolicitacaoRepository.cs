@@ -1,7 +1,7 @@
 namespace ConflitosAgendaApi.Repositories.Interfaces;
 using ConflitosAgendaApi.Models;
 
-public interface iSolicitacaoRepository
+public interface ISolicitacaoRepository
 {
     Task<Solicitacao> GetByIdAsync(int id);
     Task<List<Solicitacao>> GetAllAsync();

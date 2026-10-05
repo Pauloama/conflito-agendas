@@ -9,5 +9,4 @@ public interface IPeriodoRepository
     Task<Periodo?> UpdateAsync(Periodo periodo);
     Task<Periodo?> DeleteAsync(int id);
     Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId);
-    Task<bool> ValidarPeriodoAsync(int periodoId);
 }

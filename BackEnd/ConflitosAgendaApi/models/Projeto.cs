@@ -6,13 +6,11 @@ public sealed class Projeto
     {
     }
     public Projeto(
-        int id,
         string nome,
         List<Colaborador> pessoasCriticas,
         List<Colaborador> colaboradores
     )
     {
-        this.Id = id;
         this.Nome = nome;
         this.PessoasCriticas = pessoasCriticas;
         this.Colaboradores = colaboradores;

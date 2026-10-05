@@ -14,7 +14,7 @@ public class ColaboradorService : IColaboradorService
         _colaboradorRepository = colaboradorRepository;
     }
 
-    public async Task<ColaboradorResponseDto?> GetByIdAsync(int id)
+    public async Task<Colaborador?> GetByIdAsync(int id)
     {
         var colaborador =  await _colaboradorRepository.GetByIdAsync(id);
 
@@ -22,14 +22,13 @@ public class ColaboradorService : IColaboradorService
         {
             return null;
         }
-        return new ColaboradorResponseDto(colaborador);
+        return colaborador;
     }
-    public async Task<IEnumerable<ColaboradorResponseDto>> ListAllAsync()
+    public async Task<IEnumerable<Colaborador>> ListAllAsync()
     {
-        var colaboradores = await _colaboradorRepository.ListAllAsync();
-        return colaboradores.Select(c => new ColaboradorResponseDto(c));
+        return await _colaboradorRepository.ListAllAsync();
     }
-    public async Task<ColaboradorResponseDto?> AddAsync(
+    public async Task<Colaborador?> AddAsync(
         ColaboradorInsertionDto dto)
     {
         var colaborador = new Colaborador(
@@ -45,10 +44,10 @@ public class ColaboradorService : IColaboradorService
             return null;
         }
 
-        return new ColaboradorResponseDto(novoColaborador);
+        return novoColaborador;
     }
 
-    public async Task<ColaboradorResponseDto?> UpdateAsync(int id, ColaboradorUpdateDto dto)
+    public async Task<Colaborador?> UpdateAsync(int id, ColaboradorUpdateDto dto)
     {
         var colaborador = await _colaboradorRepository.GetByIdAsync(id);
 
@@ -66,7 +65,7 @@ public class ColaboradorService : IColaboradorService
             return null;
         }
 
-        return new ColaboradorResponseDto(colaboradorAtualizado);
+        return colaboradorAtualizado;
     }
 
     public async Task<bool?> DeleteAsync(int id)
@@ -74,12 +73,12 @@ public class ColaboradorService : IColaboradorService
         var colaborador = await _colaboradorRepository.GetByIdAsync(id);
         if (colaborador == null)
         {
-            return null;
+            throw new ArgumentNullException("O colaborador informado não existe.");
         }
         await _colaboradorRepository.DeleteAsync(id);
         return true;
     }
-    public async Task<ColaboradorResponseDto?> TornarCoordenadorAsync(int id, ColaboradorUpdateDto dto)
+    public async Task<Colaborador?> TornarCoordenadorAsync(int id, ColaboradorUpdateDto dto)
     {
         var colaborador = await _colaboradorRepository.GetByIdAsync(id);
 
@@ -96,7 +95,7 @@ public class ColaboradorService : IColaboradorService
             return null;
         }
 
-        return new ColaboradorResponseDto(colaboradorAtualizado);
+        return colaboradorAtualizado;
     }
 
 }

@@ -111,28 +111,4 @@ public class PeriodoRepository : IPeriodoRepository
             throw new Exception($"Erro ao listar períodos para o colaborador com ID {colaboradorId}: {ex.Message}", ex);
         }
     }
-
-    public async Task<bool> ValidarPeriodoAsync(int periodoId)
-    {
-        try
-        {
-            var periodo = await _context.Periodos.FindAsync(periodoId);
-            if (periodo == null)
-            {
-                throw new KeyNotFoundException($"Período com ID {periodoId} não encontrado.");
-            }
-            else if (periodo.DataInicio >= periodo.DataFim)
-                {
-                    return false;
-                }
-            else
-                {
-                    return true;
-                }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Erro ao validar o período com ID {periodoId}: {ex.Message}", ex);
-        }
-    }
 }

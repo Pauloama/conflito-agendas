@@ -4,7 +4,7 @@ using ConflitosAgendaApi.Models;
 using ConflitosAgendaApi.Repositories.Interfaces;
 using ConflitosAgendaApi.Data;
 using Microsoft.EntityFrameworkCore;
-public class SolicitacaoRepository : iSolicitacaoRepository
+public class SolicitacaoRepository : ISolicitacaoRepository
 {
     private readonly AppDbContext _context;
 

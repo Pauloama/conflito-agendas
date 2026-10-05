@@ -34,4 +34,18 @@ public sealed class Solicitacao
         this.Status = StatusSolicitacao.Recusada;
         this.Observacao = observacao;
     }
+
+    public void Atualizar(
+        Colaborador colaborador,
+        List<Periodo> periodos,
+        Colaborador coordenador,
+        StatusSolicitacao status,
+        string? observacao)
+    {
+        Colaborador = colaborador;
+        Periodos = periodos;
+        Coordenador = coordenador;
+        Status = status;
+        Observacao = observacao;
+    }
 }

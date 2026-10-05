@@ -14,61 +14,93 @@ public class PeriodoService : IPeriodoService
         _periodoRepository = periodoRepository;
     }
 
-    public async Task<PeriodoResponseDto?> GetByIdAsync(int id)
+    public async Task<Periodo?> GetByIdAsync(int id)
     {
         var periodo = await _periodoRepository.GetByIdAsync(id);
+
         if (periodo == null)
         {
             return null;
         }
-        return new PeriodoResponseDto(periodo);
+        
+        return periodo;
     }
-    public async Task<IEnumerable<PeriodoResponseDto>> ListAllAsync()
+    public async Task<IEnumerable<Periodo>> ListAllAsync()
     {
-        var periodos = await _periodoRepository.ListAllAsync();
-        return periodos.Select(p => new PeriodoResponseDto(p));
+        return await _periodoRepository.ListAllAsync();
     }
-    public async Task<PeriodoInsertionDto?> AddAsync(PeriodoInsertionDto periodo)
+    public async Task<Periodo?> AddAsync(PeriodoInsertionDto periodo)
     {
         if (periodo == null)
         {
-            return null;
+            throw new ArgumentNullException(nameof(periodo));
         }
-        var periodoExistente = await _periodoRepository.ListByColaboradorIdAsync(periodo.IdColaborador);
-        if (periodoExistente.Any(p => p.IdColaborador == periodo.IdColaborador && p.DataFim == periodo.DataFim || p.DataInicio == periodo.DataInicio))
+
+        var resultadoValidacao = await ValidarPeriodoAsync(periodo.DataInicio, periodo.DataFim);
+
+        if (!resultadoValidacao)
         {
-            return null;
+            throw new ArgumentException("A data de início deve ser anterior à data de fim.");
         }
-        var novoPeriodo = new Periodo(periodo.DataInicio, periodo.DataFim);
-        var periodoAdicionado = await _periodoRepository.AddAsync(novoPeriodo);
-        return new PeriodoInsertionDto(periodoAdicionado);
+
+        var novoPeriodo = await _periodoRepository.AddAsync(new Periodo(periodo.DataInicio, periodo.DataFim));
+
+        return novoPeriodo;
     }
-    public async Task<PeriodoUpdateDto?> UpdateAsync(PeriodoUpdateDto periodo)
+    public async Task<Periodo?> UpdateAsync(PeriodoUpdateDto periodo)
     {
+        if (periodo == null)
+        {
+            throw new ArgumentNullException(nameof(periodo));
+        }
+
+        var resultadoValidacao = await ValidarPeriodoAsync(periodo.DataInicio, periodo.DataFim);
+
+        if (!resultadoValidacao)
+        {
+            throw new ArgumentException("A data de início deve ser anterior à data de fim.");
+        }
+
         var periodoAtualizado = await _periodoRepository.UpdateAsync(new Periodo(periodo.DataInicio, periodo.DataFim));
-        if (periodoAtualizado == null)
-        {
-            return null;
-        }
-        return new PeriodoUpdateDto(periodoAtualizado);
+
+        return periodoAtualizado;
     }
     public async Task<bool?> DeleteAsync(int id)
     {
         var periodo = await _periodoRepository.GetByIdAsync(id);
+
         if (periodo == null)
         {
-            return null;
+            throw new ArgumentNullException("O período informado não existe.");
         }
+
         return true;
     }
-    public async Task<IEnumerable<PeriodoResponseDto>> ListByColaboradorIdAsync(int colaboradorId)
+    public async Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId)
     {
-        var periodos = await _periodoRepository.ListByColaboradorIdAsync(colaboradorId);
-        return periodos.Select(p => new PeriodoResponseDto(p));
+        return await _periodoRepository.ListByColaboradorIdAsync(colaboradorId);
     }
     public async Task<bool> ValidarPeriodoAsync(int periodoId)
     {
-        return await _periodoRepository.ValidarPeriodoAsync(periodoId);
+        var periodo = await _periodoRepository.GetByIdAsync(periodoId);
+
+        if (periodo == null)
+        {
+            return false;
+        }
+
+        return true;
+        
     }
+
+    public async Task<bool> ValidarPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+    {
+        if (dataInicio >= dataFim)
+        {
+            throw new ArgumentException("A data de início deve ser anterior à data de fim.");
+        }
+        return true;
+    }
+
 
 }

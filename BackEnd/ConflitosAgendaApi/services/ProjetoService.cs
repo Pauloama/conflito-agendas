@@ -17,36 +17,44 @@ public class ProjetoService : IProjetoService
         _colaboradorRepository = colaboradorRepository;
     }
 
-    public async Task<ProjetoResponseDto?> GetByIdAsync(int id)
+    public async Task<Projeto?> GetByIdAsync(int id)
     {
         var projeto = await _projetoRepository.GetByIdAsync(id);
         if (projeto == null) return null;
-        return new ProjetoResponseDto(projeto);
+        return projeto;
     }
 
-    public async Task<IEnumerable<ProjetoResponseDto>> ListAllAsync()
+    public async Task<IEnumerable<Projeto>> ListAllAsync()
     {
-        var projetos = await _projetoRepository.ListAllAsync();
-        return projetos.Select(p => new ProjetoResponseDto(p));
+        return await _projetoRepository.ListAllAsync();
     }
 
-    public async Task<ProjetoInsertionDto?> AddAsync(ProjetoInsertionDto projeto)
+    public async Task<Projeto?> AddAsync(ProjetoInsertionDto projeto)
     {
-        var newProjeto = new Projeto(projeto.Nome, projeto.Descricao);
-        var addedProjeto = await _projetoRepository.AddAsync(newProjeto);
-        if (addedProjeto == null) return null;
-        return new ProjetoInsertionDto(addedProjeto);
+        if (projeto == null)
+        {
+            throw new ArgumentNullException("O projeto informado não pode ser adicionado.");
+        }
+        var novoProjeto = await _projetoRepository.AddAsync(
+            new Projeto(
+                projeto.Nome,
+                projeto.PessoasCriticas,
+                projeto.Colaboradores));
+
+        return novoProjeto;
     }
 
-    public async Task<ProjetoUpdateDto?> UpdateAsync(ProjetoUpdateDto projeto)
+    public async Task<Projeto?> UpdateAsync(int id)
     {
-        var existingProjeto = await _projetoRepository.GetByIdAsync(projeto.Id);
+        var existingProjeto = await _projetoRepository.GetByIdAsync(id);
+
         if (existingProjeto == null) return null;
 
-        existingProjeto.Update(projeto);
         var updatedProjeto = await _projetoRepository.UpdateAsync(existingProjeto);
+
         if (updatedProjeto == null) return null;
-        return new ProjetoUpdateDto(updatedProjeto);
+        
+        return updatedProjeto;
     }
 
     public async Task<bool?> DeleteAsync(int id)
@@ -55,9 +63,14 @@ public class ProjetoService : IProjetoService
         return deleted != null;
     }
 
-    public async Task<IEnumerable<ColaboradorResponseDto>> ListColaboradoresAsync(int projetoId)
+    public async Task<IEnumerable<Colaborador>> ListColaboradoresAsync(int projetoId)
     {
-        var colaboradores = await _colaboradorRepository.ListByProjetoIdAsync(projetoId);
-        return colaboradores.Select(c => new ColaboradorResponseDto(c));
+        var projeto = await _projetoRepository.GetByIdAsync(projetoId);
+        if (projeto == null)
+        {
+            throw new ArgumentNullException("O projeto informado não existe.");
+        }
+        var projetoDto = new ProjetoResponseDto(projeto);
+        return projetoDto.Colaboradores;
     }
 }
