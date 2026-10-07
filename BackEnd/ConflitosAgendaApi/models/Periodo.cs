@@ -1,5 +1,5 @@
 namespace ConflitosAgendaApi.Models;
-public class Periodo
+public sealed class Periodo
 {
     public Periodo()
     {

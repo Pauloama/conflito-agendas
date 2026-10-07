@@ -50,6 +50,7 @@ public class SolicitacaoRepository : ISolicitacaoRepository
             .Include(s => s.Coordenador)
             .Where(s => s.Colaborador.Id == colaboradorId)
             .ToListAsync();
+            
         if (list == null || list.Count == 0)
         {
             throw new KeyNotFoundException("Nenhuma solicitação encontrada para o colaborador especificado.");
@@ -65,6 +66,7 @@ public class SolicitacaoRepository : ISolicitacaoRepository
             .Include(s => s.Coordenador)
             .Where(s => s.Status == status)
             .ToListAsync();
+
         if (list == null || list.Count == 0)
         {
             throw new KeyNotFoundException("Nenhuma solicitação encontrada para o status especificado.");

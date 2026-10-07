@@ -21,64 +21,88 @@ public class SolicitacaoService : ISolicitacaoService
         _periodoRepository = periodoRepository;
     }
 
-    public async Task<List<Solicitacao>> GetAllAsync()
+    public async Task<List<SolicitacaoResponseDto>> GetAllAsync()
     {
-        return await _solicitacaoRepository.GetAllAsync();
+       var solicitacoes = await _solicitacaoRepository.GetAllAsync();
+       
+       if (solicitacoes is null)
+        {
+            throw new InvalidOperationException("Não foi possível recuperar as solicitações.");
+        }
+
+        var solicitacoesDto = solicitacoes.Select(s => new SolicitacaoResponseDto(s)).ToList();
+        return solicitacoesDto;
     }
 
-    public async Task<Solicitacao?> GetByIdAsync(int id)
+    public async Task<SolicitacaoResponseDto?> GetByIdAsync(int id)
     {
-        return await _solicitacaoRepository.GetByIdAsync(id);
+        var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
+
+        if (solicitacao is null)
+        {
+            throw new InvalidOperationException($"Solicitação com ID {id} não encontrada.");
+        }
+        
+        return new SolicitacaoResponseDto(solicitacao);
     }
 
-    public async Task<List<Solicitacao>> GetByColaboradorIdAsync(int colaboradorId)
+    public async Task<List<SolicitacaoResponseDto>> GetByColaboradorIdAsync(int colaboradorId)
     {
-        return await _solicitacaoRepository.GetByColaboradorIdAsync(colaboradorId);
+        var solicitacoes = await _solicitacaoRepository.GetByColaboradorIdAsync(colaboradorId);
+        if (solicitacoes is null)
+        {
+            throw new InvalidOperationException($"Nenhuma solicitação encontrada para o colaborador com ID {colaboradorId}.");
+        }
+        return solicitacoes.Select(s => new SolicitacaoResponseDto(s)).ToList();
     }
 
-    public async Task<List<Solicitacao>> GetByPeriodoIdAsync(int periodoId)
+    public async Task<List<SolicitacaoResponseDto>> GetByPeriodoIdAsync(int periodoId)
     {
         var solicitacoes = await _solicitacaoRepository.GetAllAsync();
+        if (solicitacoes is null)
+        {
+            throw new InvalidOperationException($"Nenhuma solicitação encontrada.");
+        }
 
-        return solicitacoes
+        var solicitacoesDto = solicitacoes
             .Where(s => s.Periodos.Any(p => p.Id == periodoId))
-            .ToList();
+            .Select(s => new SolicitacaoResponseDto(s)).ToList();
+            
+        return solicitacoesDto;
     }
 
-    public async Task<List<Solicitacao>> GetByStatusAsync(StatusSolicitacao status)
+    public async Task<List<SolicitacaoResponseDto>> GetByStatusAsync(StatusSolicitacao status)
     {
-        return await _solicitacaoRepository.GetByStatusAsync(status);
+        var solicitacoes = await _solicitacaoRepository.GetByStatusAsync(status);
+
+        if (solicitacoes is null)
+        {
+            throw new InvalidOperationException($"Nenhuma solicitação encontrada.");
+        }
+
+        var solicitacoesDto = solicitacoes.Select(s => new SolicitacaoResponseDto(s)).ToList();
+        return solicitacoesDto;
     }
 
     public async Task<Solicitacao> AddAsync(SolicitacaoInsertionDto dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        if (dto.Colaborador is null)
+        if(dto.Periodos is null || !dto.Periodos.Any())
         {
-            throw new ArgumentException(
-                "A solicitação deve possuir um colaborador.",
-                nameof(dto));
-        }
-
-        if (dto.Coordenador is null)
-        {
-            throw new ArgumentException(
-                "A solicitação deve possuir um coordenador.",
-                nameof(dto));
-        }
-
-        if (dto.Periodos.Count == 0)
-        {
-            throw new ArgumentException(
-                "A solicitação deve possuir ao menos um período.",
-                nameof(dto));
+            throw new ArgumentException("A solicitação deve conter pelo menos um período.");
         }
 
         var solicitacao = new Solicitacao(
             dto.Colaborador,
             dto.Periodos,
-            dto.Coordenador);
+            dto.Status,
+            dto.CriadaEm,
+            dto.Coordenador,
+            dto.Observacao,
+            dto.Abono,
+            dto.isPessoaCritica,
+            dto.TotalDias);
 
         await _solicitacaoRepository.AddAsync(solicitacao);
 
@@ -128,8 +152,28 @@ public class SolicitacaoService : ISolicitacaoService
     {
         var solicitacao = await _solicitacaoRepository.GetByIdAsync(solicitacaoId);
 
-        return solicitacao is not null &&
-               solicitacao.Periodos.Count > 0 &&
-               solicitacao.Periodos.All(p => p.DataInicio < p.DataFim);
+        if (solicitacao is null)
+        {
+            throw new InvalidOperationException($"Solicitação com ID {solicitacaoId} não encontrada.");
+        }
+
+        if ()
     }
+
+    /*
+
+
+
+    To do
+    Validar se o colaborador é uma pessoa crítica em relação ao projeto
+    Validar se os períodos da solicitação entram em conflito com os períodos de outros colaboradores críticos
+    
+    
+    Alterar o estado da solicitação
+
+    */
+
+    /*
+    Eu preciso receber 
+    */
 }

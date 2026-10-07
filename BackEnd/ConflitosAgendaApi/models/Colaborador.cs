@@ -1,6 +1,6 @@
 namespace ConflitosAgendaApi.Models;
 
-public class Colaborador
+public sealed class Colaborador
 {
     public Colaborador(
     )

@@ -16,4 +16,18 @@ public class SolicitacaoResponseDto
     public int TotalDias { get; private set; }
     public bool Abono { get; private set; } = false;
     public bool isPessoaCritica { get; private set; } = false;
+
+    public SolicitacaoResponseDto(Solicitacao solicitacao)
+    {
+        this.Id = solicitacao.Id;
+        this.Colaborador = solicitacao.Colaborador;
+        this.Periodos = solicitacao.Periodos;
+        this.Status = solicitacao.Status;
+        this.CriadaEm = solicitacao.CriadaEm;
+        this.Coordenador = solicitacao.Coordenador;
+        this.Observacao = solicitacao.Observacao;
+        this.TotalDias = solicitacao.TotalDias;
+        this.Abono = solicitacao.Abono;
+        this.isPessoaCritica = solicitacao.isPessoaCritica;
+    }
 }
