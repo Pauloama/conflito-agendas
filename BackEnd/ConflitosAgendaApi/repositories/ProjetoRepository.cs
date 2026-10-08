@@ -66,4 +66,22 @@ public class ProjetoRepository : IProjetoRepository
         await _context.SaveChangesAsync();
         return projeto;
     }
+
+    public async Task<IEnumerable<Projeto>> ListProjetosByColaboradorIdAsync(int colaboradorId)
+    {
+        var projetos = await _context.Projetos
+            .Where(p => p.Colaboradores.Any(c => c.Id == colaboradorId))
+            .ToListAsync();
+
+        return projetos;
+    }
+
+    public async Task<IEnumerable<Projeto>> ListProjetosByPessoasCriticasIdAsync(int pessoacriticaId)
+    {
+        var projetos = await _context.Projetos
+            .Where(p => p.PessoasCriticas.Any(c => c.Id == pessoacriticaId))
+            .ToListAsync();
+
+        return projetos;
+    }
 }

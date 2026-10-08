@@ -10,5 +10,6 @@ public interface IProjetoService
     Task<Projeto?> UpdateAsync(int id);
     Task<bool?> DeleteAsync(int id);
     Task<IEnumerable<Colaborador>> ListColaboradoresAsync(int projetoId);
+    
 
 }

@@ -11,5 +11,6 @@ public interface IPeriodoService
     Task<bool?> DeleteAsync(int id);
     Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId);
     Task<bool> ValidarPeriodoAsync(int periodoId);
+    Task<bool> ValidarPeriodoAsync(DateTime dataInicio, DateTime dataFim);
     
 }

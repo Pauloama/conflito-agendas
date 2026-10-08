@@ -11,21 +11,25 @@ public class SolicitacaoService : ISolicitacaoService
     private readonly IColaboradorRepository _colaboradorRepository;
     private readonly IPeriodoRepository _periodoRepository;
 
+    private readonly IProjetoRepository _projetoRepository;
+
     public SolicitacaoService(
         ISolicitacaoRepository solicitacaoRepository,
         IColaboradorRepository colaboradorRepository,
-        IPeriodoRepository periodoRepository)
+        IPeriodoRepository periodoRepository,
+        IProjetoRepository projetoRepository)
     {
         _solicitacaoRepository = solicitacaoRepository;
         _colaboradorRepository = colaboradorRepository;
         _periodoRepository = periodoRepository;
+        _projetoRepository = projetoRepository;
     }
 
     public async Task<List<SolicitacaoResponseDto>> GetAllAsync()
     {
-       var solicitacoes = await _solicitacaoRepository.GetAllAsync();
-       
-       if (solicitacoes is null)
+        var solicitacoes = await _solicitacaoRepository.GetAllAsync();
+
+        if (solicitacoes is null)
         {
             throw new InvalidOperationException("Não foi possível recuperar as solicitações.");
         }
@@ -42,7 +46,7 @@ public class SolicitacaoService : ISolicitacaoService
         {
             throw new InvalidOperationException($"Solicitação com ID {id} não encontrada.");
         }
-        
+
         return new SolicitacaoResponseDto(solicitacao);
     }
 
@@ -67,7 +71,7 @@ public class SolicitacaoService : ISolicitacaoService
         var solicitacoesDto = solicitacoes
             .Where(s => s.Periodos.Any(p => p.Id == periodoId))
             .Select(s => new SolicitacaoResponseDto(s)).ToList();
-            
+
         return solicitacoesDto;
     }
 
@@ -88,7 +92,7 @@ public class SolicitacaoService : ISolicitacaoService
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        if(dto.Periodos is null || !dto.Periodos.Any())
+        if (dto.Periodos is null || !dto.Periodos.Any())
         {
             throw new ArgumentException("A solicitação deve conter pelo menos um período.");
         }
@@ -150,14 +154,80 @@ public class SolicitacaoService : ISolicitacaoService
 
     public async Task<bool> ValidateSolicitacaoAsync(int solicitacaoId)
     {
-        var solicitacao = await _solicitacaoRepository.GetByIdAsync(solicitacaoId);
+        var solicitacao =
+        await _solicitacaoRepository.GetByIdAsync(solicitacaoId);
 
         if (solicitacao is null)
         {
-            throw new InvalidOperationException($"Solicitação com ID {solicitacaoId} não encontrada.");
+            throw new InvalidOperationException(
+                $"Solicitação com ID {solicitacaoId} não encontrada.");
         }
 
-        if ()
+        if (solicitacao.Periodos is null ||
+            solicitacao.Periodos.Count == 0)
+        {
+            return false;
+        }
+
+        var colaborador = solicitacao.Colaborador;
+
+        if (colaborador is null)
+        {
+            return false;
+        }
+
+        var projetosDoColaborador =
+            await _projetoRepository.ListProjetosByColaboradorIdAsync(
+                colaborador.Id);
+
+        var projetosOndeEleEcritico =
+            await _projetoRepository.ListProjetosByPessoasCriticasIdAsync(
+                colaborador.Id);
+
+        var idsProjetosDoColaborador =
+            projetosDoColaborador
+                .Select(p => p.Id)
+                .ToHashSet();
+
+        var projetosRelevantes =
+            projetosOndeEleEcritico
+                .Where(p => idsProjetosDoColaborador.Contains(p.Id))
+                .ToList();
+
+        if (projetosRelevantes.Count == 0)
+        {
+            return true;
+        }
+
+        var idsOutrasPessoasCriticas =
+            projetosRelevantes
+                .SelectMany(p => p.PessoasCriticas)
+                .Where(c => c.Id != colaborador.Id)
+                .Select(c => c.Id)
+                .Distinct()
+                .ToList();
+
+        foreach (var pessoaCriticaId in idsOutrasPessoasCriticas)
+        {
+            var periodosDaPessoaCritica =
+                await _periodoRepository.ListByColaboradorIdAsync(
+                    pessoaCriticaId);
+
+            var existeConflito =
+                solicitacao.Periodos.Any(periodoSolicitacao =>
+                    periodosDaPessoaCritica.Any(periodoExistente =>
+                        periodoSolicitacao.DataInicio <
+                            periodoExistente.DataFim &&
+                        periodoSolicitacao.DataFim >
+                            periodoExistente.DataInicio));
+
+            if (existeConflito)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*

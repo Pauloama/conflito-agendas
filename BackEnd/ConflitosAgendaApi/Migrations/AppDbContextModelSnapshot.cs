@@ -46,6 +46,33 @@ namespace ConflitosAgendaApi.Migrations
                     b.ToTable("Colaboradores");
                 });
 
+            modelBuilder.Entity("ConflitosAgendaApi.Models.Periodo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdColaborador")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SolicitacaoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SolicitacaoId");
+
+                    b.ToTable("Periodos");
+                });
+
             modelBuilder.Entity("ConflitosAgendaApi.Models.Projeto", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +116,9 @@ namespace ConflitosAgendaApi.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("TotalDias")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isPessoaCritica")
                         .HasColumnType("bit");
 
@@ -99,30 +129,6 @@ namespace ConflitosAgendaApi.Migrations
                     b.HasIndex("CoordenadorId");
 
                     b.ToTable("Solicitacoes");
-                });
-
-            modelBuilder.Entity("Periodo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataFim")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataInicio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("SolicitacaoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitacaoId");
-
-                    b.ToTable("Periodos");
                 });
 
             modelBuilder.Entity("ProjetoColaborador", b =>
@@ -155,6 +161,13 @@ namespace ConflitosAgendaApi.Migrations
                     b.ToTable("ProjetoPessoaCritica");
                 });
 
+            modelBuilder.Entity("ConflitosAgendaApi.Models.Periodo", b =>
+                {
+                    b.HasOne("ConflitosAgendaApi.Models.Solicitacao", null)
+                        .WithMany("Periodos")
+                        .HasForeignKey("SolicitacaoId");
+                });
+
             modelBuilder.Entity("ConflitosAgendaApi.Models.Solicitacao", b =>
                 {
                     b.HasOne("ConflitosAgendaApi.Models.Colaborador", "Colaborador")
@@ -172,13 +185,6 @@ namespace ConflitosAgendaApi.Migrations
                     b.Navigation("Colaborador");
 
                     b.Navigation("Coordenador");
-                });
-
-            modelBuilder.Entity("Periodo", b =>
-                {
-                    b.HasOne("ConflitosAgendaApi.Models.Solicitacao", null)
-                        .WithMany("Periodos")
-                        .HasForeignKey("SolicitacaoId");
                 });
 
             modelBuilder.Entity("ProjetoColaborador", b =>
