@@ -15,6 +15,15 @@ public sealed class Projeto
         this.PessoasCriticas = pessoasCriticas;
         this.Colaboradores = colaboradores;
     }
+    public void Atualizar(
+        string nome,
+        List<Colaborador> pessoasCriticas,
+        List<Colaborador> colaboradores)
+    {
+        Nome = nome;
+        PessoasCriticas = pessoasCriticas;
+        Colaboradores = colaboradores;
+    }
     public int Id { get; private set; }
     public string Nome { get; private set; } = string.Empty;
     public List<Colaborador> PessoasCriticas { get; private set; } = new();

@@ -9,6 +9,12 @@ public sealed class Periodo
             DataInicio = dataInicio;
             DataFim = dataFim;   
     }
+    public void Atualizar(DateTime dataInicio, DateTime dataFim)
+    {
+        DataInicio = dataInicio;
+        DataFim = dataFim;
+    }
+
     public int Id { get; private set; }
     public DateTime DataInicio { get; private set; }
     public DateTime DataFim { get; private set; }

@@ -47,9 +47,9 @@ public class ProjetoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id)
+    public async Task<IActionResult> Update(int id, ProjetoUpdateDto dto)
     {
-        var projetoAtualizado = await _projetoService.UpdateAsync(id);
+        var projetoAtualizado = await _projetoService.UpdateAsync(id, dto);
 
         if (projetoAtualizado is null)
         {
@@ -78,11 +78,11 @@ public class ProjetoController : ControllerBase
     }
 
     [HttpGet("{id}/colaboradores")]
-    public async Task<IActionResult> ListColaboradores(int projetoId)
+    public async Task<IActionResult> ListColaboradores(int id)
     {
         try
         {
-            var colaboradores = await _projetoService.ListColaboradoresAsync(projetoId);
+            var colaboradores = await _projetoService.ListColaboradoresAsync(id);
             return Ok(colaboradores);
         }
         catch (ArgumentNullException ex)

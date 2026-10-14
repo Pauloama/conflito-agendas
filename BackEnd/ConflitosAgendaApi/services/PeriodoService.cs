@@ -47,7 +47,7 @@ public class PeriodoService : IPeriodoService
 
         return novoPeriodo;
     }
-    public async Task<Periodo?> UpdateAsync(PeriodoUpdateDto periodo)
+    public async Task<Periodo?> UpdateAsync(int id, PeriodoUpdateDto periodo)
     {
         if (periodo == null)
         {
@@ -61,7 +61,14 @@ public class PeriodoService : IPeriodoService
             throw new ArgumentException("A data de início deve ser anterior à data de fim.");
         }
 
-        var periodoAtualizado = await _periodoRepository.UpdateAsync(new Periodo(periodo.DataInicio, periodo.DataFim));
+        var periodoExistente = await _periodoRepository.GetByIdAsync(id);
+        if (periodoExistente is null)
+        {
+            return null;
+        }
+
+        periodoExistente.Atualizar(periodo.DataInicio, periodo.DataFim);
+        var periodoAtualizado = await _periodoRepository.UpdateAsync(periodoExistente);
 
         return periodoAtualizado;
     }
@@ -74,6 +81,7 @@ public class PeriodoService : IPeriodoService
             throw new ArgumentNullException("O período informado não existe.");
         }
 
+        await _periodoRepository.DeleteAsync(id);
         return true;
     }
     public async Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId)
@@ -99,6 +107,17 @@ public class PeriodoService : IPeriodoService
         {
             throw new ArgumentException("A data de início deve ser anterior à data de fim.");
         }
+        
+        if ((dataFim - dataInicio).TotalDays < 10)
+        {
+            throw new ArgumentException("O período deve ter no mínimo 10 dias.");
+        }
+        
+        if ((dataFim - dataInicio).TotalDays > 30)
+        {
+            throw new ArgumentException("O período não pode exceder 30 dias.");
+        }
+
         return true;
     }
 

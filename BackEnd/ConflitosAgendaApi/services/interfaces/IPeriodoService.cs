@@ -7,7 +7,7 @@ public interface IPeriodoService
     Task<Periodo?> GetByIdAsync(int id);
     Task<IEnumerable<Periodo>> ListAllAsync();
     Task<Periodo?> AddAsync(PeriodoInsertionDto periodo);
-    Task<Periodo?> UpdateAsync(PeriodoUpdateDto periodo);
+    Task<Periodo?> UpdateAsync(int id, PeriodoUpdateDto periodo);
     Task<bool?> DeleteAsync(int id);
     Task<IEnumerable<Periodo>> ListByColaboradorIdAsync(int colaboradorId);
     Task<bool> ValidarPeriodoAsync(int periodoId);

@@ -5,6 +5,10 @@ namespace ConflitosAgendaApi.Dtos.Projetos;
 
 public class ProjetoUpdateDto
 {
+    public ProjetoUpdateDto()
+    {
+    }
+
     [Required]
     public string Nome { get; set; } = string.Empty;
     [Required]

@@ -5,6 +5,10 @@ namespace ConflitosAgendaApi.Dtos.Colaboradores;
 
 public class ColaboradorInsertionDto
 {
+    public ColaboradorInsertionDto()
+    {
+    }
+
     [Required]
     public string Nome { get; set; } = string.Empty;
     [Required]
@@ -17,5 +21,4 @@ public class ColaboradorInsertionDto
         Email = colaborador.Email;
     }
 }
-
 

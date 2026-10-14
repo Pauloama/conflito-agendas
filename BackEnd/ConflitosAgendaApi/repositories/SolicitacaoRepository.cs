@@ -13,17 +13,13 @@ public class SolicitacaoRepository : ISolicitacaoRepository
         _context = context;
     }
 
-    public async Task<Solicitacao> GetByIdAsync(int id)
+    public async Task<Solicitacao?> GetByIdAsync(int id)
     {
         var solicitacao = await _context.Solicitacoes
             .Include(s => s.Colaborador)
             .Include(s => s.Periodos)
             .Include(s => s.Coordenador)
             .FirstOrDefaultAsync(s => s.Id == id);
-        if (solicitacao == null)
-        {
-            throw new KeyNotFoundException($"Solicitação com ID {id} não encontrada.");
-        }
         return solicitacao;
     }
 
@@ -35,11 +31,7 @@ public class SolicitacaoRepository : ISolicitacaoRepository
             .Include(s => s.Coordenador)
             .ToListAsync();
         
-        if (list == null || list.Count == 0)
-        {
-            throw new KeyNotFoundException("Nenhuma solicitação encontrada.");
-        }
-            return list;
+        return list;
     }
 
     public async Task<List<Solicitacao>> GetByColaboradorIdAsync(int colaboradorId)
@@ -51,10 +43,6 @@ public class SolicitacaoRepository : ISolicitacaoRepository
             .Where(s => s.Colaborador.Id == colaboradorId)
             .ToListAsync();
             
-        if (list == null || list.Count == 0)
-        {
-            throw new KeyNotFoundException("Nenhuma solicitação encontrada para o colaborador especificado.");
-        }
         return list;
     }
 
@@ -67,10 +55,6 @@ public class SolicitacaoRepository : ISolicitacaoRepository
             .Where(s => s.Status == status)
             .ToListAsync();
 
-        if (list == null || list.Count == 0)
-        {
-            throw new KeyNotFoundException("Nenhuma solicitação encontrada para o status especificado.");
-        }
         return list;
     }
 

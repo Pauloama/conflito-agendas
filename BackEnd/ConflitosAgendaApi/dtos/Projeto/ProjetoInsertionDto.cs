@@ -4,6 +4,10 @@ namespace ConflitosAgendaApi.Dtos.Projetos;
 
 public class ProjetoInsertionDto
 {
+    public ProjetoInsertionDto()
+    {
+    }
+
     [Required]
     public string Nome { get; set; } = string.Empty;
     [Required]

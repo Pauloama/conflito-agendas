@@ -27,15 +27,36 @@ public sealed class Solicitacao
         this.TotalDias = totalDias;
     }
     public int Id { get; private set; }
-    public Colaborador Colaborador { get; private set; }
+    public Colaborador Colaborador { get; private set; } = null!;
     public List<Periodo> Periodos { get; private set; } = new();
     public StatusSolicitacao Status { get; private set; } = StatusSolicitacao.Em_Analise;
     public DateTimeOffset CriadaEm { get; private set; } = DateTimeOffset.UtcNow;
-    public Colaborador Coordenador { get; private set; }
+    public Colaborador Coordenador { get; private set; } = null!;
     public int TotalDias { get; private set; }
     public string? Observacao { get; private set; } 
     public bool Abono { get; private set; } = false;
     public bool isPessoaCritica { get; private set; } = false;
+
+    public bool ValidarAbono(IEnumerable<Periodo>? periodos = null)
+    {
+        var quantidadePeriodos = (periodos ?? Periodos).Count();
+
+        if (this.Abono && quantidadePeriodos > 2)
+        {
+            return false;
+        }
+        if(this.Abono && this.TotalDias > 20)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public bool ValidarNumPeriodos(IEnumerable<Periodo>? periodos = null)
+    {
+        var quantidadePeriodos = (periodos ?? Periodos).Count();
+        return quantidadePeriodos is >= 1 and <= 3;
+    }
 
     public void Aprovar()
     {

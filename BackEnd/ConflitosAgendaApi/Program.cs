@@ -20,6 +20,7 @@ builder.Services.AddScoped<IColaboradorService, ColaboradorService>();
 builder.Services.AddScoped<IPeriodoService, PeriodoService>();
 builder.Services.AddScoped<IProjetoService, ProjetoService>();
 builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
+builder.Services.AddScoped<IConflitoSolicitacaoService, ConflitoSolicitacaoService>();
 
 var app = builder.Build();
 

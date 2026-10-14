@@ -48,13 +48,13 @@ public class PeriodoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update( PeriodoUpdateDto dto)
+    public async Task<IActionResult> Update(int id, PeriodoUpdateDto dto)
     {
-        var periodoAtualizado = await _periodoService.UpdateAsync(dto);
+        var periodoAtualizado = await _periodoService.UpdateAsync(id, dto);
 
         if (periodoAtualizado is null)
         {
-            return BadRequest("Não foi possível atualizar o período.");
+            return NotFound();
         }
 
         return Ok(periodoAtualizado);

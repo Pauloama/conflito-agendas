@@ -44,11 +44,16 @@ public class ProjetoService : IProjetoService
         return novoProjeto;
     }
 
-    public async Task<Projeto?> UpdateAsync(int id)
+    public async Task<Projeto?> UpdateAsync(int id, ProjetoUpdateDto projeto)
     {
         var existingProjeto = await _projetoRepository.GetByIdAsync(id);
 
         if (existingProjeto == null) return null;
+
+        existingProjeto.Atualizar(
+            projeto.Nome,
+            projeto.PessoasCriticas,
+            projeto.Colaboradores);
 
         var updatedProjeto = await _projetoRepository.UpdateAsync(existingProjeto);
 

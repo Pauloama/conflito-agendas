@@ -16,12 +16,18 @@ public class ProjetoRepository : IProjetoRepository
 
     public async Task<Projeto?> GetByIdAsync(int id)
     {
-        return await _context.Projetos.FindAsync(id);
+        return await _context.Projetos
+            .Include(projeto => projeto.Colaboradores)
+            .Include(projeto => projeto.PessoasCriticas)
+            .FirstOrDefaultAsync(projeto => projeto.Id == id);
     }
 
     public async Task<IEnumerable<Projeto>> ListAllAsync()
     {
-        return await _context.Projetos.ToListAsync();
+        return await _context.Projetos
+            .Include(projeto => projeto.Colaboradores)
+            .Include(projeto => projeto.PessoasCriticas)
+            .ToListAsync();
     }
 
     public async Task<Projeto?> AddAsync(Projeto projeto)
@@ -40,6 +46,10 @@ public class ProjetoRepository : IProjetoRepository
         }
         try
         {
+            existingProjeto.Atualizar(
+                projeto.Nome,
+                projeto.PessoasCriticas,
+                projeto.Colaboradores);
             _context.Projetos.Update(existingProjeto);
             await _context.SaveChangesAsync();
         }
@@ -70,6 +80,7 @@ public class ProjetoRepository : IProjetoRepository
     public async Task<IEnumerable<Projeto>> ListProjetosByColaboradorIdAsync(int colaboradorId)
     {
         var projetos = await _context.Projetos
+            .Include(projeto => projeto.PessoasCriticas)
             .Where(p => p.Colaboradores.Any(c => c.Id == colaboradorId))
             .ToListAsync();
 
@@ -79,6 +90,7 @@ public class ProjetoRepository : IProjetoRepository
     public async Task<IEnumerable<Projeto>> ListProjetosByPessoasCriticasIdAsync(int pessoacriticaId)
     {
         var projetos = await _context.Projetos
+            .Include(projeto => projeto.PessoasCriticas)
             .Where(p => p.PessoasCriticas.Any(c => c.Id == pessoacriticaId))
             .ToListAsync();
 

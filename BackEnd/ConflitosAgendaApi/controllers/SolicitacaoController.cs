@@ -48,7 +48,7 @@ public class SolicitacaoController : ControllerBase
         return Ok(solicitacoes);
     }
 
-    [HttpGet("projeto/{projetoId}")]
+    [HttpGet("periodo/{periodoId}")]
     public async Task<IActionResult> GetByPeriodoId(int periodoId)
     {
         var solicitacoes = await _solicitacaoService.GetByPeriodoIdAsync(periodoId);
@@ -59,6 +59,12 @@ public class SolicitacaoController : ControllerBase
         }
 
         return Ok(solicitacoes);
+    }
+
+    [HttpGet("projeto/{projetoId}")]
+    public Task<IActionResult> GetByPeriodoLegacy(int projetoId)
+    {
+        return GetByPeriodoId(projetoId);
     }
 
     [HttpGet("status/{status}")]
